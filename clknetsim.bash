@@ -57,6 +57,13 @@ start_client() {
 		EOF
 	    args=(-f $CLKNETSIM_TMPDIR/conf.$node $opts)
 	    ;;
+	snmpd)
+	    cat > $CLKNETSIM_TMPDIR/conf.$node <<-EOF
+		[global]
+		$config
+		EOF
+	    args=(-f $CLKNETSIM_TMPDIR/conf.$node $opts)
+	    ;;
 	chronyc)
 	    args=($opts -m)
 	    while read line; do args+=("$line"); done <<< "$config"
@@ -92,6 +99,8 @@ start_client() {
 	    exit 1
 	    ;;
     esac
+
+	echo "args ${args[@]}"
 
     LD_PRELOAD=$CLKNETSIM_PATH/clknetsim.so \
     CLKNETSIM_NODE=$node CLKNETSIM_SOCKET=$CLKNETSIM_TMPDIR/sock \
